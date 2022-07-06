@@ -1,10 +1,44 @@
 #!/usr/bin/env python3
 import numpy as np
 import yaml
+import speech_recognition as sr
+import pyttsx3
+import cv2
 
+def init_engine():
+    engine = pyttsx3.init()
+    return engine
 
-user = "Alex"
+def say(s, engine):
+    engine.say(s)
+    engine.runAndWait()
+
+r = sr.Recognizer()
+
+user_list = ["alex", "public"]
+
+with sr.Microphone() as source:
+    ask_for_book = r.listen(source, 10, 3)
+
+activate = r.recognize_google(ask_for_book, language="en-IN")
+print(activate)
+name1 = None
+engine = init_engine()
+try:
+    say("ok wut is ur name?", engine)
+
+    with sr.Microphone() as source:
+        name = r.listen(source, 10, 3)
+    user = r.recognize_google(name)
+    name = name.lower()
+    name1 = name
+except:
+    user = "alex"
+
 eps = 1e-10
+if name1 is not None:
+    if "alex" in name1:
+        user = "alex"
 
 user_file = f'Users/{user}.yaml'
 with open(user_file, 'r') as file:
@@ -56,4 +90,31 @@ with open(f'Categories/{categories[2][0]}.txt', 'r') as f:
         book_list.append(book_name)
         i += 1
 
+say("Alright " + user + " here are your recommended books", engine)
 print(book_list)
+
+book1 = cv2.imread(f"pictures/{book_list[0]}.jpeg")
+book1 = cv2.resize(book1, (190, 281))
+cv2.imshow("book1", book1)
+
+book2 = cv2.imread(f"pictures/{book_list[1]}.jpeg")
+book2 = cv2.resize(book2, (190, 281))
+cv2.imshow("book2", book2)
+
+book3 = cv2.imread(f"pictures/{book_list[2]}.jpeg")
+book3 = cv2.resize(book3, (190, 281))
+cv2.imshow("book3", book3)
+
+book4 = cv2.imread(f"pictures/{book_list[3]}.jpeg")
+book4 = cv2.resize(book4, (190, 281))
+cv2.imshow("book4", book4)
+
+book5 = cv2.imread(f"pictures/{book_list[4]}.jpeg")
+book5 = cv2.resize(book5, (190, 281))
+cv2.imshow("book5", book5)
+
+book6 = cv2.imread(f"pictures/{book_list[5]}.jpeg")
+book6 = cv2.resize(book6, (190, 281))
+cv2.imshow("book6", book6)
+
+cv2.waitKey(0)
